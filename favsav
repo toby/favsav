@@ -24,6 +24,6 @@ fi
 mkdir -p links
 mkdir -p media
 egrep -oh 'https?://[^ ”:]+' favs.txt | sort | uniq > links.txt
-wget -P links/ -nc -t 2 -i links.txt
+wget -P links/ -nc -t 2 -T 2 -i links.txt
 egrep -vh 'profile_' links/* | egrep -oh 'https?://pbs.twimg.com/media/[^ ]+[.](jpg|png|jpg:large|png:large)' | sort | uniq > media.txt
-wget -P media -nc -t 2 -i media.txt
+wget -P media -nc -t 2 -T 2 -i media.txt
