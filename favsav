@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if ! [ -x "$(command -v egrep)" ]; then
+  echo "favsav requires egrep"
+  exit 1
+fi
+
+if ! [ -x "$(command -v wget)" ]; then
+  echo "favsav requires wget"
+  exit 1
+fi
+
+if ! [ -x "$(command -v t)" ]; then
+  echo "favsav requires t: https://github.com/sferik/t"
+  exit 1
+fi
+
+if [ ! -f favs.txt ]; then
+  NUM_FAVS=$(t whoami | sed -n -e 's/Favorites[ ]*\([0-9,]\)/\1/p' | tr -d ',')
+  echo "Downloading $NUM_FAVS favorites"
+  t favorites -n $NUM_FAVS > favs.txt
+fi
+
+mkdir -p links
+mkdir -p media
+egrep -oh 'https?://[^ ”:]+' favs.txt | sort | uniq > links.txt
+wget -P links/ -nc -t 5 -i links.txt
+egrep -vh 'profile_' links/* | egrep -oh 'https?://pbs.twimg.com/media/[^ ]+[.](jpg|png|jpg:large|png:large)' | sort | uniq > media.txt
+wget -P media -nc -t 5 -i media.txt
