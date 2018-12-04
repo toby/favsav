@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 if ! [ -x "$(command -v egrep)" ]; then
   echo "favsav requires egrep"
   exit 1
